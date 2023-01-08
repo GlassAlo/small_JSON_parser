@@ -1,0 +1,3 @@
+/home/patatofour/Documents/Epitech/perso/json_parser_cpp/CMakeFiles/parser_json.dir
+/home/patatofour/Documents/Epitech/perso/json_parser_cpp/CMakeFiles/edit_cache.dir
+/home/patatofour/Documents/Epitech/perso/json_parser_cpp/CMakeFiles/rebuild_cache.dir

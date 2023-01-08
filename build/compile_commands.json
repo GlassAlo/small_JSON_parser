@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/patatofour/Documents/Epitech/perso/json_parser_cpp/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/parser_json.dir/main.cpp.o -c /home/patatofour/Documents/Epitech/perso/json_parser_cpp/main.cpp",
+  "file": "/home/patatofour/Documents/Epitech/perso/json_parser_cpp/main.cpp"
+}
+]

@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/parser_json.dir/main.cpp.o -o parser_json 
