@@ -41,31 +41,13 @@ std::string readFile(std::string &filename, ERROR_STATUS &error)
 
 int cleanString(std::string &str)
 {
+    const char toRemove[] = {' ', '"', '}', '{', '[', ']', ',', '\n'};
     size_t pos = 0;
 
-    while ((pos = str.find(' ')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find('"')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find('}')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find('{')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find('[')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find(']')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find(',')) != std::string::npos) {
-        str.erase(pos, 1);
-    }
-    while ((pos = str.find('\n')) != std::string::npos) {
-        str.erase(pos, 1);
+    for (const char &it : toRemove) {
+        while ((pos = str.find(it)) != std::string::npos) {
+            str.erase(pos, 1);
+        }
     }
     return 0;
 }
@@ -76,6 +58,7 @@ std::map<std::string, std::any> parseJsonObj(std::string &json, ERROR_STATUS &er
     std::string key = "";
     std::string value = "";
     size_t pos = 0;
+    size_t posCurl = 0;
 
     while ((pos = json.find(':')) != std::string::npos) {
         key = json.substr(0, pos);
@@ -87,15 +70,12 @@ std::map<std::string, std::any> parseJsonObj(std::string &json, ERROR_STATUS &er
             continue;
         } else {
             value = json.substr(0, pos);
-            if (value.find('}') != std::string::npos) {
-                cleanString(value);
-                content[key] = value;
-                json.erase(0, value.length() + 10);
+            posCurl = value.find('}');
+            cleanString(value);
+            content[key] = value;
+            json.erase(0, pos + 1);
+            if (posCurl != std::string::npos) {
                 return content;
-            } else {
-                cleanString(value);
-                json.erase(0, pos + 1);
-                content[key] = value;
             }
         }
     }
@@ -109,11 +89,30 @@ int printParsedMap(std::map<std::string, std::any> content)
         if (it.second.type() == typeid(std::string)) {
             std::cout << it.first << " : " << std::any_cast<std::string>(it.second) << std::endl;
         } else if (it.second.type() == typeid(std::map<std::string, std::any>)) {
-            std::cout << it.first << " : " << std::endl;
+            std::cout << it.first << " contains : " << std::endl;
             printParsedMap(std::any_cast<std::map<std::string, std::any>>(it.second));
+            std::cout << "End nested" << std::endl;
         }
     }
     return 0;
+}
+
+std::string getStringFromValue(std::any value)
+{
+    if (value.type() == typeid(std::string)) {
+        return std::any_cast<std::string>(value);
+    }
+    std::cout << "Value is not a string" << std::endl;
+    return "";
+}
+
+std::map<std::string, std::any> getObjFromValue(std::any value)
+{
+    if (value.type() == typeid(std::map<std::string, std::any>)) {
+        return std::any_cast<std::map<std::string, std::any>>(value);
+    }
+    std::cout << "Value is not a nested object" << std::endl;
+    return {};
 }
 
 int main(const int argc, const char *argv[])
